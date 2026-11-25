@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cielora
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cielora_dev_change_me}
+      POSTGRES_DB: cielora_ai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cielora -d cielora_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://cielora:${POSTGRES_PASSWORD:-cielora_dev_change_me}@postgres:5432/cielora_ai
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+
+volumes:
+  postgres_data:

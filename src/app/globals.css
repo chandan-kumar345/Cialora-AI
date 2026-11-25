@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: #f4f5fa;
+  color: #0f172a;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cielora-sidebar-bg {
+  background: radial-gradient(
+      140% 45% at 10% 96%,
+      rgba(168, 85, 247, 0.44) 0%,
+      rgba(168, 85, 247, 0) 62%
+    ),
+    radial-gradient(
+      95% 38% at 85% 84%,
+      rgba(236, 72, 153, 0.3) 0%,
+      rgba(236, 72, 153, 0) 68%
+    ),
+    radial-gradient(
+      80% 35% at 25% 18%,
+      rgba(91, 33, 182, 0.28) 0%,
+      rgba(91, 33, 182, 0) 65%
+    ),
+    linear-gradient(180deg, #130829 0%, #170a33 55%, #1d0c3f 100%);
+}
+
+.cielora-hero-bg {
+  background: radial-gradient(
+      circle at 76% 35%,
+      rgba(192, 38, 211, 0.42) 0%,
+      rgba(124, 58, 237, 0.24) 36%,
+      rgba(22, 12, 46, 0) 70%
+    ),
+    radial-gradient(
+      circle at 22% 95%,
+      rgba(79, 70, 229, 0.3) 0%,
+      rgba(22, 12, 46, 0) 55%
+    ),
+    linear-gradient(122deg, #160934 0%, #2a115c 46%, #421770 100%);
+}
+
+.cielora-auth-bg {
+  background: radial-gradient(
+      circle at 12% 16%,
+      rgba(196, 181, 253, 0.45) 0%,
+      rgba(196, 181, 253, 0) 44%
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(244, 114, 182, 0.34) 0%,
+      rgba(244, 114, 182, 0) 48%
+    ),
+    radial-gradient(
+      circle at 20% 88%,
+      rgba(147, 197, 253, 0.45) 0%,
+      rgba(147, 197, 253, 0) 48%
+    ),
+    linear-gradient(135deg, #f3f1fe 0%, #eff4ff 52%, #fdf1f8 100%);
+}
+
+.cielora-gradient-btn {
+  background: linear-gradient(90deg, #7c3aed 0%, #b026d3 52%, #ec4899 100%);
+  box-shadow: 0 10px 24px -6px rgba(176, 38, 211, 0.44);
+}
+
+.cielora-gradient-btn:hover {
+  filter: brightness(1.06);
+}
+
+.cielora-ai-btn {
+  background: linear-gradient(90deg, #6d28d9 0%, #7c3aed 55%, #8b5cf6 100%);
+  box-shadow: 0 10px 22px -6px rgba(109, 40, 217, 0.45);
+}
+
+.cielora-ai-btn:hover {
+  filter: brightness(1.07);
+}
+
+.cielora-nav-active {
+  background: linear-gradient(90deg, #ec4899 0%, #f472b6 52%, #fb923c 100%);
+  box-shadow: 0 8px 22px -5px rgba(236, 72, 153, 0.62);
+}
+
+.cielora-upgrade-btn {
+  background: linear-gradient(90deg, #fb923c 0%, #f43f5e 48%, #ec4899 100%);
+  box-shadow: 0 8px 20px -5px rgba(244, 63, 94, 0.5);
+}
+
+.cielora-upgrade-btn:hover {
+  filter: brightness(1.06);
+}
+
+.cielora-ai-card {
+  background: radial-gradient(
+      circle at 12% 22%,
+      rgba(167, 139, 250, 0.25) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 92% 85%,
+      rgba(244, 114, 182, 0.24) 0%,
+      transparent 55%
+    ),
+    linear-gradient(145deg, #eef2ff 0%, #f5f3ff 52%, #fdf2f8 100%);
+}
