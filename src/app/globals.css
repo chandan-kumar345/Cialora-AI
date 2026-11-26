@@ -38,17 +38,17 @@ body {
 
 .cielora-hero-bg {
   background: radial-gradient(
-      circle at 76% 35%,
-      rgba(192, 38, 211, 0.42) 0%,
-      rgba(124, 58, 237, 0.24) 36%,
-      rgba(22, 12, 46, 0) 70%
+      circle at 82% 24%,
+      rgba(139, 92, 246, 0.24) 0%,
+      rgba(167, 139, 250, 0.12) 40%,
+      rgba(255, 255, 255, 0) 70%
     ),
     radial-gradient(
-      circle at 22% 95%,
-      rgba(79, 70, 229, 0.3) 0%,
-      rgba(22, 12, 46, 0) 55%
+      circle at 14% 88%,
+      rgba(196, 181, 253, 0.28) 0%,
+      rgba(255, 255, 255, 0) 55%
     ),
-    linear-gradient(122deg, #160934 0%, #2a115c 46%, #421770 100%);
+    linear-gradient(120deg, #ffffff 0%, #f5f0ff 46%, #eae0ff 100%);
 }
 
 .cielora-auth-bg {
@@ -89,12 +89,12 @@ body {
 }
 
 .cielora-nav-active {
-  background: linear-gradient(90deg, #ec4899 0%, #f472b6 52%, #fb923c 100%);
-  box-shadow: 0 8px 22px -5px rgba(236, 72, 153, 0.62);
+  background: linear-gradient(90deg, #a855f7 0%, #ec4899 58%, #f43f5e 100%);
+  box-shadow: 0 8px 22px -5px rgba(236, 72, 153, 0.65);
 }
 
 .cielora-upgrade-btn {
-  background: linear-gradient(90deg, #fb923c 0%, #f43f5e 48%, #ec4899 100%);
+  background: linear-gradient(90deg, #f59e0b 0%, #fb7185 52%, #ec4899 100%);
   box-shadow: 0 8px 20px -5px rgba(244, 63, 94, 0.5);
 }
 
@@ -114,4 +114,135 @@ body {
       transparent 55%
     ),
     linear-gradient(145deg, #eef2ff 0%, #f5f3ff 52%, #fdf2f8 100%);
+}
+
+.cielora-select-clean {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-mask-blend {
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 78% at 52% 50%,
+    #000 46%,
+    transparent 94%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 78% at 52% 50%,
+    #000 46%,
+    transparent 94%
+  );
+}
+
+/* Workspace chrome */
+.workspace-shell {
+  background: radial-gradient(ellipse at 82% 7%, #eee9fc, transparent 38%), #faf8ff;
+  color: #100c27;
+}
+.workspace-shell header.cielora-header-card {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(167, 139, 250, 0.16) 0%, rgba(167, 139, 250, 0) 48%),
+    radial-gradient(circle at 12% 100%, rgba(236, 72, 153, 0.06) 0%, rgba(236, 72, 153, 0) 42%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.97) 0%, rgba(250, 247, 255, 0.95) 60%, rgba(244, 238, 255, 0.93) 100%);
+  border-radius: 26px;
+  box-shadow:
+    0 12px 32px -14px rgba(91, 33, 182, 0.16),
+    0 2px 8px -2px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.workspace-shell header h1 { font-size: clamp(1.22rem, 1.5vw, 1.6rem); font-weight: 800; }
+.workspace-shell header h1 + p { color: #3b3354; font-size: .92rem; }
+.workspace-shell header input[type=search] { border-color: #cdbafa; }
+.workspace-shell header input[type=search]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.cielora-sidebar-bg {
+  background: radial-gradient(ellipse at 110% 0%, #351064, transparent 56%), linear-gradient(160deg,#260d49,#16092e 72%,#290b4b);
+  border-radius: 30px;
+  padding: clamp(12px, 1vw, 17px) 13px;
+}
+.cielora-sidebar-bg a[href="/dashboard"]:first-child:has(img) { padding: 0 5px; border: 0; margin-bottom: clamp(10px, 3vh, 30px); }
+.cielora-sidebar-bg nav { display: grid; gap: 5px; }
+.cielora-sidebar-bg nav > a, .cielora-sidebar-bg nav > div > div:first-child {
+  margin: 0; background-color: #ffffff12; border: 1px solid #ffffff0c;
+  display: flex; align-items: center; gap: 14px; color: white;
+  font-size: clamp(.85rem, 1vw, 1.05rem); font-weight: 600; border-radius: 17px;
+  min-height: clamp(34px, 4.9vh, 47px); padding: 4px clamp(10px, 1vw, 18px);
+}
+.cielora-sidebar-bg nav svg.shrink-0 { width: 1.55em; height: 1.55em; }
+.cielora-sidebar-bg nav a:hover { background-color: #ffffff24; }
+.cielora-sidebar-bg nav .cielora-nav-active { background-image: linear-gradient(110deg,#e46cf3,#a600ee 58%,#d000cf); border-color: #edb4ff; }
+.cielora-sidebar-bg p.uppercase { color: #f2eafb; letter-spacing: .025em; font-size: .75rem; padding-bottom: 7px; }
+.sidebar-plan { flex-shrink: 0; border-color: #9646cd; background: linear-gradient(125deg,#552380,#350964); border-radius: 22px; padding: clamp(12px,1.2vw,20px); }
+.sidebar-plan img { width: 32px; height: 32px; }
+.sidebar-plan > div, .sidebar-plan button { font-size: 1rem; }
+.sidebar-plan p { font-size: .8rem; color: white; }
+.sidebar-plan button { padding-block: .65rem; }
+.cielora-upgrade-btn { background: linear-gradient(105deg,#ffb32c,#ff6572 42%,#f000d8 95%); }
+@media (min-width: 1024px) {
+  .workspace-shell > aside { width: clamp(220px,17.3vw,308px); }
+  .workspace-shell main { padding-inline: 12px 18px; }
+  .workspace-shell header.cielora-header-card { padding-inline: 24px; min-height: 76px; }
+}
+
+/* Campaign dashboard */
+.marketing-dashboard .cielora-hero-bg {
+  isolation: isolate; border-radius: clamp(22px,2.4vw,40px);
+  padding: 16px clamp(20px,3.9vw,68px);
+  background: radial-gradient(ellipse at 30% 100%,#4e108a,transparent 65%),linear-gradient(130deg,#270740,#291059 60%,#390744);
+  box-shadow: 0 5px 12px -9px #6000c5;
+}
+.cielora-hero-bg::before {
+  content: ""; position: absolute; inset: 0 0 0 38%; z-index: -1;
+  background: url('/images/campaign-banner.webp') right center / 100% 100% no-repeat;
+  mask-image: linear-gradient(90deg, transparent,#000 12%);
+}
+.campaign-intro { width: min(48%,530px); }
+.campaign-intro > span { background: linear-gradient(110deg,#b12fbb,#5e14c4); font-size: .78rem; color: white; }
+.campaign-intro h2 { font-size: clamp(1.6rem,2.1vw,2.35rem); line-height: 1.04; letter-spacing: -.045em; }
+.campaign-intro h2 span { font-size: 1.12em; }
+.campaign-intro p { max-width: 475px; color: white; font-size: clamp(.83rem,.94vw,1rem); line-height: 1.22; }
+.campaign-intro button { font-size: .85rem; }
+.module-card { --tint: #e9dcff; border-color: color-mix(in srgb,var(--tint),#a25ce2 30%); background: linear-gradient(145deg,#fff,var(--tint)); border-radius: 25px; padding: 9px clamp(12px,1.65vw,28px); box-shadow: 0 3px 4px -2px #4e25752b; }
+.module-card:nth-child(2) { --tint: #fcdef3; }
+.module-card:nth-child(3) { --tint: #e3f1e9; }
+.module-card:nth-child(4) { --tint: #dde5ff; }
+.module-card:nth-child(5) { --tint: #ffe5d8; }
+.module-card:nth-child(6) { --tint: #f7ddff; }
+.module-card h3, .dashboard-panel h2 { font-size: clamp(1rem,1.12vw,1.25rem); font-weight: 800; letter-spacing: -.045em; color: #100d23; }
+.module-card h3 { margin-top: 3px; line-height: 1.15; }
+.module-card p { font-size: clamp(.8rem,.88vw,.95rem); line-height: 1.2; color: #29213b; }
+.module-card span svg { width: 23px; height: 23px; }
+.module-card > div > svg { color: #221132; }
+.dashboard-panel { min-width: 0; padding: clamp(14px,1vw,20px); border: 1px solid #dbccfc; border-radius: 29px; background: linear-gradient(145deg,#fff,#f9f6ff); box-shadow: 0 4px 6px -4px #906ac2; }
+.dashboard-panel thead { background: #eee8fb; color: #261936; }
+.metric-card { position: relative; padding: 5px 6px 5px clamp(34px,3.1vw,53px); border-radius: 12px; }
+.metric-card > div:first-child { min-height: 0; }
+.metric-card > div:first-child > span:first-child { position: absolute; top: 10px; left: 7px; width: clamp(21px,2vw,34px); height: clamp(21px,2vw,34px); }
+.metric-card > div:nth-child(2) { margin-top: 0; overflow-wrap: anywhere; }
+.dashboard-panel.cielora-ai-card { justify-content: center; background: radial-gradient(at bottom right,#ede4ff,transparent 65%),#fbf8ff; }
+.cielora-ai-card img { width: clamp(64px,6vw,104px); height: auto; }
+.cielora-ai-card h2 { font-size: clamp(1.1rem,1.35vw,1.5rem); }
+.cielora-ai-card p { color: #2c223c; font-size: .95rem; }
+.cielora-ai-card button { width: 74%; align-self: flex-end; background: linear-gradient(180deg,#9634ff,#5900d7); font-size: 1rem; }
+@media (min-width: 1280px) {
+  .dashboard-row { grid-template-columns: minmax(0,2.4fr) minmax(0,1fr); }
+}
+@media (max-width: 767px) {
+  .marketing-dashboard .cielora-hero-bg { padding-bottom: clamp(95px,30vw,190px); }
+  .cielora-hero-bg::before { inset: auto 0 0; height: clamp(95px,30vw,190px); mask-image: linear-gradient(transparent,#000 15%); }
+  .campaign-intro { width: 100%; }
+  .cielora-sidebar-bg { border-radius: 0 24px 24px 0; }
 }

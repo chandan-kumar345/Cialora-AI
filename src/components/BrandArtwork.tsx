@@ -17,7 +17,7 @@ export function CieloraLogo({
         src="/images/cielora-mark.png"
         alt="Cielora AI mark"
         className={`shrink-0 object-contain drop-shadow-sm ${
-          compact ? "h-9 w-11" : "h-11 w-14"
+          compact ? "h-10 w-12" : "h-11 w-14"
         }`}
       />
       <div className="leading-tight">
@@ -43,8 +43,8 @@ export function CieloraLogo({
         </div>
         {showTagline && (
           <p
-            className={`font-medium tracking-tight ${
-              compact ? "text-[10px]" : "text-[11px]"
+            className={`font-medium tracking-tight whitespace-nowrap ${
+              compact ? "text-[9.5px]" : "text-[11px]"
             } ${darkText ? "text-slate-600" : "text-purple-200/75"}`}
           >
             Your Business. Beyond the Sky.
@@ -73,7 +73,7 @@ export function BotEmblem({ size = "md" }: { size?: "sm" | "md" }) {
       <img
         src="/images/ai-bot-3d.png"
         alt="Cielora AI bot"
-        className="h-7 w-7 shrink-0 object-contain"
+        className="h-9 w-9 shrink-0 object-contain"
       />
     );
   }
@@ -91,7 +91,7 @@ export function CrownEmblem() {
     <img
       src="/images/crown-3d.png"
       alt="Pro upgrade crown"
-      className="h-11 w-12 object-contain drop-shadow-[0_8px_16px_rgba(245,158,11,0.45)]"
+      className="h-9 w-10 object-contain drop-shadow-[0_8px_16px_rgba(245,158,11,0.45)]"
     />
   );
 }

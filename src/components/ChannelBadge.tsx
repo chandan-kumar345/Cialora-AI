@@ -113,34 +113,34 @@ export function ChannelBadge({ channel }: { channel: string }) {
   const renderIcon = () => {
     switch (channel) {
       case "WHATSAPP":
-        return <MessageCircle className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <MessageCircle className={`h-4 w-4 ${meta.color}`} />;
       case "META_ADS":
-        return <MetaInfinityIcon className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <MetaInfinityIcon className={`h-4 w-4 ${meta.color}`} />;
       case "EMAIL":
-        return <Mail className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Mail className={`h-4 w-4 ${meta.color}`} />;
       case "SMS":
-        return <MessageSquare className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <MessageSquare className={`h-4 w-4 ${meta.color}`} />;
       case "INSTAGRAM":
-        return <Instagram className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Instagram className={`h-4 w-4 ${meta.color}`} />;
       case "LINKEDIN":
       case "LINKEDIN_ADS":
-        return <Linkedin className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Linkedin className={`h-4 w-4 ${meta.color}`} />;
       case "GOOGLE_ADS":
       case "TIKTOK_ADS":
-        return <Megaphone className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Megaphone className={`h-4 w-4 ${meta.color}`} />;
       case "FACEBOOK":
       case "X":
       case "YOUTUBE":
-        return <Share2 className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Share2 className={`h-4 w-4 ${meta.color}`} />;
       default:
-        return <Globe className={`h-3.5 w-3.5 ${meta.color}`} />;
+        return <Globe className={`h-4 w-4 ${meta.color}`} />;
     }
   };
 
   return (
-    <span className="inline-flex items-center gap-2 text-xs font-semibold text-slate-700">
+    <span className="inline-flex items-center gap-2 whitespace-nowrap text-[11px] font-semibold text-slate-700">
       <span
-        className={`inline-flex h-6 w-6 items-center justify-center rounded-full border ${meta.bg}`}
+        className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border ${meta.bg}`}
       >
         {renderIcon()}
       </span>
@@ -162,7 +162,7 @@ export function TypeBadge({ type }: { type: string }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-0.5 text-[11px] font-semibold ${cls}`}
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-semibold ${cls}`}
     >
       {label}
     </span>
@@ -193,7 +193,7 @@ export function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-0.5 text-[11px] font-semibold ${cls}`}
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-semibold ${cls}`}
     >
       {label}
     </span>

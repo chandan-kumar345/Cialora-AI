@@ -5,9 +5,11 @@ node_modules/
 
 # Next.js
 .next/
+.next-verify*/
 out/
 build/
 next-env.d.ts
+*.tsbuildinfo
 
 # Environment & Secrets
 .env

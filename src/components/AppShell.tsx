@@ -22,7 +22,7 @@ import {
   Send,
   Settings,
   Sparkles,
-  TrendingUp,
+  Target,
   Users,
   X,
   Zap,
@@ -30,7 +30,6 @@ import {
 import {
   BotEmblem,
   CieloraLogo,
-  CrownEmblem,
 } from "@/components/BrandArtwork";
 import { useWorkspace } from "@/components/WorkspaceProvider";
 import {
@@ -59,7 +58,7 @@ interface NotificationItem {
 
 const OVERVIEW_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/campaigns", label: "Campaigns", icon: TrendingUp },
+  { href: "/campaigns", label: "Campaigns", icon: Megaphone },
   {
     href: "/social",
     label: "Social Marketing",
@@ -69,7 +68,7 @@ const OVERVIEW_ITEMS = [
       { href: "/social?view=calendar", label: "Publish Calendar" },
     ],
   },
-  { href: "/ads", label: "Ads Manager", icon: Megaphone },
+  { href: "/ads", label: "Ads Manager", icon: Target },
   { href: "/messaging", label: "Bulk Messaging", icon: MessageSquare },
   { href: "/leads", label: "Leads CRM", icon: Users },
   { href: "/automation", label: "Automation", icon: Zap },
@@ -235,22 +234,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const firstName = getFirstName(user.fullName);
   const initials = getInitials(user.fullName);
 
-  const sidebarContent = (
-    <div className="cielora-sidebar-bg flex h-full w-[246px] flex-col justify-between px-4 py-5 text-white">
-      <div className="space-y-5 overflow-y-auto pr-0.5">
+  const renderSidebarCard = (isMobile = false) => (
+    <div
+      className={`cielora-sidebar-bg no-scrollbar flex h-full w-full flex-col justify-between gap-2 overflow-hidden px-3 py-2.5 text-white ${
+        isMobile ? "" : "rounded-[22px] shadow-[0_16px_42px_-12px_rgba(20,8,45,0.48)]"
+      }`}
+    >
+      <div className="no-scrollbar flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto lg:overflow-visible">
         <Link
           href="/dashboard"
-          className="block px-1.5"
+          className="block px-1 pt-0.5 pb-1 border-b border-white/10 shrink-0"
           onClick={() => setMobileNavOpen(false)}
         >
           <CieloraLogo compact />
         </Link>
 
-        <div>
-          <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
+        <div className="shrink-0">
+          <p className="px-2.5 pb-0.5 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
             Overview
           </p>
-          <nav className="mt-2 space-y-1" aria-label="Main navigation">
+          <nav className="space-y-0.5" aria-label="Main navigation">
             {OVERVIEW_ITEMS.map((item) => {
               const active =
                 pathname === item.href ||
@@ -260,7 +263,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 return (
                   <div key={item.href}>
                     <div
-                      className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition ${
+                      className={`flex items-center justify-between whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
                         active
                           ? "cielora-nav-active text-white font-semibold"
                           : "text-purple-100/80 hover:bg-white/10 hover:text-white"
@@ -269,32 +272,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <Link
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
-                        className="flex flex-1 items-center gap-3"
+                        className="flex flex-1 items-center gap-2.5 whitespace-nowrap"
                       >
-                        <Icon className="h-[17px] w-[17px] shrink-0" />
+                        <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
                         <span>{item.label}</span>
                       </Link>
                       <button
                         type="button"
                         aria-label="Toggle Social Marketing menu"
                         onClick={() => setSocialExpanded((v) => !v)}
-                        className="p-0.5 opacity-80 hover:opacity-100"
+                        className="p-0.5 opacity-80 hover:opacity-100 shrink-0"
                       >
                         <ChevronRight
-                          className={`h-3.5 w-3.5 transition-transform ${
+                          className={`h-4 w-4 transition-transform ${
                             socialExpanded ? "rotate-90" : ""
                           }`}
+                          strokeWidth={2.2}
                         />
                       </button>
                     </div>
                     {socialExpanded && (
-                      <div className="mt-1 ml-7 space-y-1 border-l border-white/15 pl-3">
+                      <div className="mt-0.5 ml-6 space-y-0.5 border-l border-white/15 pl-2.5">
                         {item.children.map((sub) => (
                           <Link
                             key={sub.label}
                             href={sub.href}
                             onClick={() => setMobileNavOpen(false)}
-                            className="block rounded-lg px-2.5 py-1.5 text-xs text-purple-200/80 hover:bg-white/10 hover:text-white"
+                            className="block whitespace-nowrap rounded-lg px-2 py-1 text-[11px] text-purple-200/80 hover:bg-white/10 hover:text-white"
                           >
                             {sub.label}
                           </Link>
@@ -309,13 +313,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition ${
+                  className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
                     active
                       ? "cielora-nav-active text-white font-semibold"
                       : "text-purple-100/80 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  <Icon className="h-[17px] w-[17px] shrink-0" />
+                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -323,11 +327,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
 
-        <div>
-          <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
+        <div className="shrink-0">
+          <p className="px-2.5 pb-0.5 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
             Setup
           </p>
-          <nav className="mt-2 space-y-1" aria-label="Setup navigation">
+          <nav className="space-y-0.5" aria-label="Setup navigation">
             {SETUP_ITEMS.map((item) => {
               const active = pathname.startsWith(item.href);
               const Icon = item.icon;
@@ -336,13 +340,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition ${
+                  className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
                     active
                       ? "cielora-nav-active text-white font-semibold"
                       : "text-purple-100/80 hover:bg-white/10 hover:text-white"
                   }`}
                 >
-                  <Icon className="h-[17px] w-[17px] shrink-0" />
+                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -351,15 +355,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      {/* Bottom Upgrade Card matching Image 3 */}
-      <div className="relative mt-6 rounded-2xl border border-purple-300/20 bg-gradient-to-b from-white/10 to-purple-950/50 p-4 backdrop-blur-md">
-        <div className="absolute -top-6 right-1">
-          <CrownEmblem />
-        </div>
-        <div className="flex items-center gap-2 text-[13px] font-bold text-white">
-          <span className="inline-flex h-5 w-5 items-center justify-center rounded-md bg-amber-400/20 text-amber-300 text-xs">
-            ♛
-          </span>
+      {/* Bottom Upgrade Card matching reference layout (compact, zero overlap) */}
+      <div className="shrink-0 rounded-2xl border border-purple-300/20 bg-gradient-to-b from-white/10 to-purple-950/55 p-2.5 backdrop-blur-md">
+        <div className="flex items-center gap-2 text-[12px] font-bold text-white whitespace-nowrap">
+          <img
+            src="/images/crown-3d.png"
+            alt=""
+            aria-hidden="true"
+            className="h-7 w-8 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(245,158,11,0.38)]"
+          />
           <span>
             {user.planTier === "PRO"
               ? "Pro Workspace"
@@ -368,16 +372,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 : "Upgrade to Pro"}
           </span>
         </div>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-purple-100/75">
+        <p className="mt-1 text-[10px] leading-tight text-purple-100/75">
           Unlock automation, AI tools and higher limits.
         </p>
         <button
           type="button"
           onClick={() => setUpgradeOpen(true)}
-          className="cielora-upgrade-btn mt-3 flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-xs font-bold text-white transition"
+          className="cielora-upgrade-btn mt-2 flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 text-[11px] font-bold text-white transition"
         >
           <span>{user.planTier === "STARTER" ? "Upgrade Now" : "Manage Plan"}</span>
-          <ArrowRight className="h-3.5 w-3.5" />
+          <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
         </button>
       </div>
     </div>
@@ -391,9 +395,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       searchResults.adCampaigns.length > 0);
 
   return (
-    <div className="flex min-h-screen bg-[#F4F5FA] text-slate-900">
-      <aside className="hidden lg:block lg:w-[246px] lg:shrink-0 lg:sticky lg:top-0 lg:h-screen">
-        {sidebarContent}
+    <div className="workspace-shell flex min-h-screen overflow-x-clip bg-[#F4F5FA] text-slate-900">
+      {/* Floating Rounded Desktop Sidebar matching reference image */}
+      <aside className="hidden lg:block lg:w-[244px] lg:shrink-0 lg:sticky lg:top-0 lg:h-screen lg:p-2.5">
+        {renderSidebarCard(false)}
       </aside>
 
       {mobileNavOpen && (
@@ -402,255 +407,279 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
             onClick={() => setMobileNavOpen(false)}
           />
-          <div className="relative z-10 h-full">{sidebarContent}</div>
+          <div className="relative z-10 h-full w-[248px]">
+            {renderSidebarCard(true)}
+          </div>
         </div>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Clean Top Header matching Image 3 */}
-        <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/95 px-4 py-3.5 backdrop-blur sm:px-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                aria-label="Open navigation menu"
-                onClick={() => setMobileNavOpen(true)}
-                className="rounded-xl border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 lg:hidden"
-              >
-                <Menu className="h-5 w-5" />
-              </button>
-              <div>
-                <h1 className="text-[19px] font-bold tracking-tight text-slate-900 sm:text-[21px]">
-                  {greeting},{" "}
-                  <span className="text-[#7C3AED]">{firstName}</span>{" "}
-                  <span aria-hidden="true">👋</span>
-                </h1>
-                <p className="text-xs text-slate-500">
-                  Here&apos;s what&apos;s happening with your marketing today.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* Search Pill */}
-              <div className="relative hidden md:block w-64 xl:w-72">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search campaigns, leads, reports..."
-                  aria-label="Global workspace search"
-                  className="w-full rounded-full border border-slate-200/90 bg-[#F8F9FC] py-2 pl-10 pr-4 text-xs text-slate-800 placeholder:text-slate-400 focus:border-violet-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/15"
-                />
-                {searchQuery.trim().length > 0 && (
-                  <div className="absolute left-0 right-0 top-11 z-40 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
-                    {searching ? (
-                      <p className="text-xs text-slate-500">Searching...</p>
-                    ) : !hasSearchHits ? (
-                      <p className="text-xs text-slate-500">
-                        No matching records in your workspace.
-                      </p>
-                    ) : (
-                      <div className="space-y-2.5 text-xs">
-                        {searchResults!.campaigns.length > 0 && (
-                          <div>
-                            <p className="font-semibold text-slate-400 uppercase text-[10px]">
-                              Campaigns
-                            </p>
-                            {searchResults!.campaigns.map((c) => (
-                              <Link
-                                key={c.id}
-                                href="/campaigns"
-                                onClick={() => setSearchQuery("")}
-                                className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
-                              >
-                                <span className="font-medium text-slate-800">
-                                  {c.name}
-                                </span>
-                                <span className="text-[11px] text-slate-500">
-                                  {c.channel}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults!.leads.length > 0 && (
-                          <div>
-                            <p className="font-semibold text-slate-400 uppercase text-[10px]">
-                              Leads CRM
-                            </p>
-                            {searchResults!.leads.map((l) => (
-                              <Link
-                                key={l.id}
-                                href="/leads"
-                                onClick={() => setSearchQuery("")}
-                                className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
-                              >
-                                <span className="font-medium text-slate-800">
-                                  {l.fullName}
-                                </span>
-                                <span className="text-[11px] text-slate-500">
-                                  {l.stage}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                        {searchResults!.socialPosts.length > 0 && (
-                          <div>
-                            <p className="font-semibold text-slate-400 uppercase text-[10px]">
-                              Social Posts
-                            </p>
-                            {searchResults!.socialPosts.map((s) => (
-                              <Link
-                                key={s.id}
-                                href="/social"
-                                onClick={() => setSearchQuery("")}
-                                className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
-                              >
-                                <span className="font-medium text-slate-800">
-                                  {s.title}
-                                </span>
-                                <span className="text-[11px] text-slate-500">
-                                  {s.platform}
-                                </span>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Bell Icon */}
-              <div className="relative">
+        {/* Curved Floating Top Header */}
+        <div className="sticky top-0 z-30 bg-gradient-to-b from-[#faf8ff] via-[#faf8ff]/95 to-transparent px-4 pt-2.5 pb-2 sm:px-6 lg:pl-[12px] lg:pr-[18px]">
+          <header className="cielora-header-card relative rounded-[26px] border border-violet-200/80 px-4 py-3 backdrop-blur-md sm:px-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
-                  aria-label="Workspace notifications"
-                  onClick={() => {
-                    setNotifOpen((v) => !v);
-                    setProfileMenuOpen(false);
-                  }}
-                  className="relative flex h-9 w-9 items-center justify-center rounded-full border border-slate-200/90 bg-white text-slate-600 hover:bg-slate-50"
+                  aria-label="Open navigation menu"
+                  onClick={() => setMobileNavOpen(true)}
+                  className="flex h-11 w-11 items-center justify-center rounded-2xl border border-violet-200/80 bg-white text-slate-700 shadow-xs transition hover:bg-violet-50/70 hover:text-violet-700 lg:hidden"
                 >
-                  <Bell className="h-4 w-4" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
-                  )}
+                  <Menu className="h-6 w-6" strokeWidth={2} />
                 </button>
-                {notifOpen && (
-                  <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-40">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-900">
-                        Notifications {unreadCount > 0 ? `(${unreadCount})` : ""}
-                      </span>
-                      {unreadCount > 0 && (
-                        <button
-                          type="button"
-                          onClick={handleMarkAllRead}
-                          className="text-[11px] font-semibold text-violet-600 hover:underline"
-                        >
-                          Mark all read
-                        </button>
-                      )}
-                    </div>
-                    <div className="mt-3 max-h-72 space-y-2 overflow-y-auto">
-                      {notifications.length === 0 ? (
-                        <p className="py-6 text-center text-xs text-slate-400">
-                          No notifications yet.
-                        </p>
-                      ) : (
-                        notifications.map((n) => (
-                          <div
-                            key={n.id}
-                            className={`rounded-xl border p-2.5 text-xs ${
-                              n.isRead
-                                ? "border-slate-100 bg-slate-50/50 text-slate-600"
-                                : "border-violet-100 bg-violet-50/60 text-slate-800"
-                            }`}
-                          >
-                            <div className="font-semibold">{n.title}</div>
-                            <div className="mt-0.5 text-[11px] text-slate-500">
-                              {n.message}
-                            </div>
-                            <div className="mt-1 text-[10px] text-slate-400">
-                              {formatDate(n.createdAt, user.timezone, user.locale)}
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                )}
+                <div>
+                  <h1 className="text-[19px] font-bold tracking-tight text-slate-900 sm:text-[21px]">
+                    {greeting},{" "}
+                    <span className="text-[#7C3AED]">{firstName}</span>{" "}
+                    <span aria-hidden="true" className="inline-block text-[1.12em]">
+                      👋
+                    </span>
+                  </h1>
+                  <p className="text-xs text-slate-500">
+                    Here&apos;s what&apos;s happening with your marketing today.
+                  </p>
+                </div>
               </div>
 
-              {/* Profile Menu Pill matching Image 3 */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setProfileMenuOpen((v) => !v);
-                    setNotifOpen(false);
-                  }}
-                  className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-2 hover:bg-slate-50"
-                >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#7C3AED] to-[#A855F7] text-xs font-bold text-white shadow-xs">
-                    {initials}
-                  </span>
-                  <div className="hidden sm:block text-left leading-tight">
-                    <div className="text-xs font-bold text-slate-900">
-                      {user.fullName}
-                    </div>
-                    <div className="text-[10.5px] text-slate-500">
-                      {user.workspaceName}
-                    </div>
-                  </div>
-                  <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
-                </button>
-
-                {profileMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl z-40">
-                    <div className="border-b border-slate-100 px-3 py-2">
-                      <p className="text-xs font-bold text-slate-900">
-                        {user.fullName}
-                      </p>
-                      <p className="truncate text-[11px] text-slate-500">
-                        {user.email}
-                      </p>
-                      <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-semibold text-violet-700">
-                        <Globe className="h-3 w-3" />
-                        <span>
-                          {user.currency} · {user.locale} · {user.timezone}
-                        </span>
-                      </div>
-                    </div>
-                    <Link
-                      href="/settings"
-                      onClick={() => setProfileMenuOpen(false)}
-                      className="mt-1 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                    >
-                      <Settings className="h-3.5 w-3.5" />
-                      <span>Global Settings &amp; Security</span>
-                    </Link>
+              <div className="flex items-center gap-3">
+                {/* Search Pill */}
+                <div className="group relative hidden md:block w-68 xl:w-80">
+                  <Search
+                    className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-violet-500/85 transition-colors group-focus-within:text-violet-600"
+                    strokeWidth={2.1}
+                  />
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search campaigns, leads, reports..."
+                    aria-label="Global workspace search"
+                    className="h-11 w-full rounded-full border border-violet-200/90 bg-white/95 pl-11 pr-9 text-[13px] text-slate-800 shadow-[0_2px_10px_rgba(109,40,217,0.05)] placeholder:text-slate-400 transition focus:border-violet-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-violet-500/10"
+                  />
+                  {searchQuery.trim().length > 0 && (
                     <button
                       type="button"
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50"
+                      aria-label="Clear workspace search"
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                     >
-                      <LogOut className="h-3.5 w-3.5" />
-                      <span>Sign Out</span>
+                      <X className="h-4 w-4" strokeWidth={2.2} />
                     </button>
-                  </div>
-                )}
+                  )}
+                  {searchQuery.trim().length > 0 && (
+                    <div className="absolute left-0 right-0 top-13 z-40 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl">
+                      {searching ? (
+                        <p className="text-xs text-slate-500">Searching...</p>
+                      ) : !hasSearchHits ? (
+                        <p className="text-xs text-slate-500">
+                          No matching records in your workspace.
+                        </p>
+                      ) : (
+                        <div className="space-y-2.5 text-xs">
+                          {searchResults!.campaigns.length > 0 && (
+                            <div>
+                              <p className="font-semibold text-slate-400 uppercase text-[10px]">
+                                Campaigns
+                              </p>
+                              {searchResults!.campaigns.map((c) => (
+                                <Link
+                                  key={c.id}
+                                  href="/campaigns"
+                                  onClick={() => setSearchQuery("")}
+                                  className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
+                                >
+                                  <span className="font-medium text-slate-800">
+                                    {c.name}
+                                  </span>
+                                  <span className="text-[11px] text-slate-500">
+                                    {c.channel}
+                                  </span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                          {searchResults!.leads.length > 0 && (
+                            <div>
+                              <p className="font-semibold text-slate-400 uppercase text-[10px]">
+                                Leads CRM
+                              </p>
+                              {searchResults!.leads.map((l) => (
+                                <Link
+                                  key={l.id}
+                                  href="/leads"
+                                  onClick={() => setSearchQuery("")}
+                                  className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
+                                >
+                                  <span className="font-medium text-slate-800">
+                                    {l.fullName}
+                                  </span>
+                                  <span className="text-[11px] text-slate-500">
+                                    {l.stage}
+                                  </span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                          {searchResults!.socialPosts.length > 0 && (
+                            <div>
+                              <p className="font-semibold text-slate-400 uppercase text-[10px]">
+                                Social Posts
+                              </p>
+                              {searchResults!.socialPosts.map((s) => (
+                                <Link
+                                  key={s.id}
+                                  href="/social"
+                                  onClick={() => setSearchQuery("")}
+                                  className="mt-1 flex items-center justify-between rounded-lg px-2 py-1 hover:bg-slate-50"
+                                >
+                                  <span className="font-medium text-slate-800">
+                                    {s.title}
+                                  </span>
+                                  <span className="text-[11px] text-slate-500">
+                                    {s.platform}
+                                  </span>
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Bell Icon */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    aria-label="Workspace notifications"
+                    onClick={() => {
+                      setNotifOpen((v) => !v);
+                      setProfileMenuOpen(false);
+                    }}
+                    className="relative flex h-11 w-11 items-center justify-center rounded-full border border-violet-200/90 bg-white/95 text-slate-700 shadow-[0_2px_10px_rgba(109,40,217,0.05)] transition hover:border-violet-300 hover:bg-violet-50/70 hover:text-violet-700"
+                  >
+                    <Bell className="h-[22px] w-[22px]" strokeWidth={2} />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-2.5 right-2.5 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-white" />
+                    )}
+                  </button>
+                  {notifOpen && (
+                    <div className="absolute right-0 mt-2.5 w-80 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-40">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-900">
+                          Notifications {unreadCount > 0 ? `(${unreadCount})` : ""}
+                        </span>
+                        {unreadCount > 0 && (
+                          <button
+                            type="button"
+                            onClick={handleMarkAllRead}
+                            className="text-[11px] font-semibold text-violet-600 hover:underline"
+                          >
+                            Mark all read
+                          </button>
+                        )}
+                      </div>
+                      <div className="mt-3 max-h-72 space-y-2 overflow-y-auto">
+                        {notifications.length === 0 ? (
+                          <p className="py-6 text-center text-xs text-slate-400">
+                            No notifications yet.
+                          </p>
+                        ) : (
+                          notifications.map((n) => (
+                            <div
+                              key={n.id}
+                              className={`rounded-xl border p-2.5 text-xs ${
+                                n.isRead
+                                  ? "border-slate-100 bg-slate-50/50 text-slate-600"
+                                  : "border-violet-100 bg-violet-50/60 text-slate-800"
+                              }`}
+                            >
+                              <div className="font-semibold">{n.title}</div>
+                              <div className="mt-0.5 text-[11px] text-slate-500">
+                                {n.message}
+                              </div>
+                              <div className="mt-1 text-[10px] text-slate-400">
+                                {formatDate(n.createdAt, user.timezone, user.locale)}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Profile Menu Pill */}
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileMenuOpen((v) => !v);
+                      setNotifOpen(false);
+                    }}
+                    className="flex h-11 items-center gap-2.5 rounded-full border border-violet-200/90 bg-white/95 py-1 pl-1 pr-3.5 shadow-[0_2px_10px_rgba(109,40,217,0.05)] transition hover:border-violet-300 hover:bg-white"
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#6D28D9] via-[#7C3AED] to-[#A855F7] text-xs font-bold text-white shadow-xs ring-2 ring-violet-100">
+                      {initials}
+                    </span>
+                    <div className="hidden sm:block text-left leading-tight">
+                      <div className="text-[12.5px] font-bold text-slate-900">
+                        {user.fullName}
+                      </div>
+                      <div className="text-[10.5px] font-medium text-slate-500">
+                        {user.workspaceName}
+                      </div>
+                    </div>
+                    <ChevronDown
+                      className={`h-[18px] w-[18px] text-slate-500 transition-transform ${
+                        profileMenuOpen ? "rotate-180" : ""
+                      }`}
+                      strokeWidth={2.2}
+                    />
+                  </button>
+
+                  {profileMenuOpen && (
+                    <div className="absolute right-0 mt-2.5 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl z-40">
+                      <div className="border-b border-slate-100 px-3 py-2">
+                        <p className="text-xs font-bold text-slate-900">
+                          {user.fullName}
+                        </p>
+                        <p className="truncate text-[11px] text-slate-500">
+                          {user.email}
+                        </p>
+                        <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-semibold text-violet-700">
+                          <Globe className="h-3.5 w-3.5" />
+                          <span>
+                            {user.currency} · {user.locale} · {user.timezone}
+                          </span>
+                        </div>
+                      </div>
+                      <Link
+                        href="/settings"
+                        onClick={() => setProfileMenuOpen(false)}
+                        className="mt-1 flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                      >
+                        <Settings className="h-4 w-4 text-slate-500" />
+                        <span>Global Settings &amp; Security</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
+        </div>
 
-        <main className="flex-1 px-4 py-5 sm:px-7">{children}</main>
+        <main className="flex-1 px-4 pb-6 pt-1.5 sm:px-6">{children}</main>
       </div>
 
       {/* Cielora AI Assistant Drawer */}
@@ -677,9 +706,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 type="button"
                 aria-label="Close AI Assistant"
                 onClick={closeAiAssistant}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               >
-                <X className="h-4 w-4" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -687,7 +716,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {aiMessages.length === 0 && (
                 <div className="rounded-2xl border border-violet-100 bg-violet-50/60 p-4 text-xs leading-relaxed text-slate-700">
                   <div className="flex items-center gap-1.5 font-bold text-violet-700">
-                    <Sparkles className="h-3.5 w-3.5" />
+                    <Sparkles className="h-4 w-4" />
                     <span>Ask anything about your workspace</span>
                   </div>
                   <p className="mt-1.5">
@@ -748,7 +777,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 disabled={aiLoading || !aiPrompt.trim()}
                 className="cielora-ai-btn inline-flex items-center justify-center rounded-xl px-4 text-xs font-semibold text-white disabled:opacity-50"
               >
-                <Send className="h-3.5 w-3.5" />
+                <Send className="h-4 w-4" />
               </button>
             </form>
           </div>

@@ -55,11 +55,11 @@ export function PerformanceSplineChart({
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
 
   const width = 660;
-  const height = 195;
+  const height = 108;
   const padLeft = 40;
   const padRight = 14;
-  const padTop = 16;
-  const padBottom = 28;
+  const padTop = 14;
+  const padBottom = 26;
   const plotW = width - padLeft - padRight;
   const plotH = height - padTop - padBottom;
   const baseY = padTop + plotH;
@@ -124,7 +124,7 @@ export function PerformanceSplineChart({
       <div className="relative flex-1 min-w-0">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="h-[195px] w-full overflow-visible"
+          preserveAspectRatio="none" className="h-[108px] w-full overflow-visible"
           role="img"
           aria-label="Marketing performance trend chart"
           onMouseLeave={() => setHoverIdx(null)}
@@ -319,7 +319,7 @@ export function CampaignDonutChart({
   };
   locale: string;
 }) {
-  const radius = 50;
+  const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const total = overview.total;
 
@@ -333,16 +333,16 @@ export function CampaignDonutChart({
   let cumulativeOffset = 0;
 
   return (
-    <div className="mt-4 flex items-center justify-between gap-4">
-      <div className="relative h-[136px] w-[136px] shrink-0">
-        <svg viewBox="0 0 136 136" className="h-full w-full -rotate-90">
+    <div className="mt-3 flex items-center justify-between gap-4">
+      <div className="relative h-[142px] w-[142px] shrink-0">
+        <svg viewBox="0 0 142 142" className="h-full w-full -rotate-90">
           <circle
-            cx="68"
-            cy="68"
+            cx="71"
+            cy="71"
             r={radius}
             fill="none"
             stroke="#EEF2F6"
-            strokeWidth="19"
+            strokeWidth="22"
           />
           {total > 0 &&
             segments.map((seg) => {
@@ -353,12 +353,12 @@ export function CampaignDonutChart({
               return (
                 <circle
                   key={seg.key}
-                  cx="68"
-                  cy="68"
+                  cx="71"
+                  cy="71"
                   r={radius}
                   fill="none"
                   stroke={seg.color}
-                  strokeWidth="19"
+                  strokeWidth="22"
                   strokeDasharray={`${segLen} ${circumference - segLen}`}
                   strokeDashoffset={dashOffset}
                   strokeLinecap="butt"
@@ -367,7 +367,7 @@ export function CampaignDonutChart({
             })}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <span className="text-2xl font-extrabold text-slate-900 leading-none">
+          <span className="text-[26px] font-extrabold text-slate-900 leading-none">
             {formatNumber(total, locale)}
           </span>
           <span className="mt-1 text-[11px] font-medium text-slate-500">
