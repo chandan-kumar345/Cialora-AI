@@ -26,6 +26,8 @@ export default async function DashboardPage() {
       initialCampaigns={recentCampaigns.map((c) => ({
         ...c,
         scheduledAt: c.scheduledAt ? c.scheduledAt.toISOString() : null,
+        startedAt: c.startedAt ? c.startedAt.toISOString() : null,
+        completedAt: c.completedAt ? c.completedAt.toISOString() : null,
         createdAt: c.createdAt.toISOString(),
       }))}
     />

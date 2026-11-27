@@ -2,6 +2,8 @@
 
 import React from "react";
 import {
+  Calendar,
+  CheckCircle2,
   Globe,
   Instagram,
   Linkedin,
@@ -9,6 +11,9 @@ import {
   Megaphone,
   MessageCircle,
   MessageSquare,
+  Pause,
+  Pencil,
+  Play,
   Share2,
 } from "lucide-react";
 
@@ -196,6 +201,126 @@ export function StatusBadge({ status }: { status: string }) {
       className={`inline-flex items-center whitespace-nowrap rounded-full border px-2 py-0.5 text-[10px] font-semibold ${cls}`}
     >
       {label}
+    </span>
+  );
+}
+
+const CLEAN_CHANNEL_COLOR: Record<string, string> = {
+  WHATSAPP: "text-[#22C55E]",
+  EMAIL: "text-[#7C3AED]",
+  SMS: "text-[#0284C7]",
+  META_ADS: "text-[#0081FB]",
+  GOOGLE_ADS: "text-[#16A34A]",
+  INSTAGRAM: "text-[#EC4899]",
+  FACEBOOK: "text-[#1877F2]",
+  LINKEDIN: "text-[#0A66C2]",
+  LINKEDIN_ADS: "text-[#0A66C2]",
+};
+
+export function CampaignChannelCell({ channel }: { channel: string }) {
+  const meta = CHANNEL_META[channel] ?? {
+    label: channel.replaceAll("_", " "),
+    bg: "bg-slate-50 border-slate-200",
+    color: "text-slate-700",
+  };
+  const iconColor = CLEAN_CHANNEL_COLOR[channel] ?? "text-slate-600";
+
+  const renderIcon = () => {
+    switch (channel) {
+      case "WHATSAPP":
+        return (
+          <svg viewBox="0 0 24 24" fill="none" className={`h-5 w-5 ${iconColor}`} aria-hidden="true">
+            <path
+              d="M12 3.25a8.75 8.75 0 0 0-7.56 13.15L3.3 20.7l4.42-1.14A8.75 8.75 0 1 0 12 3.25Z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M9.4 9.1c.2-.45.42-.46.65-.47h.55c.18 0 .42.06.64.52.23.48.77 1.66.84 1.78.07.12.11.27.02.44-.09.17-.14.28-.27.43-.13.15-.28.34-.4.46-.13.13-.27.27-.11.53.16.26.71 1.17 1.52 1.89 1.04.93 1.92 1.22 2.19 1.36.27.14.43.11.59-.07.16-.18.67-.78.85-1.05.18-.27.36-.22.6-.13.25.09 1.57.74 1.84.88.27.14.45.2.52.31.07.11.07.66-.16 1.3-.23.64-1.35 1.22-1.88 1.29-.48.07-1.09.1-1.76-.11-.41-.13-.93-.31-1.6-.6-2.8-1.2-4.62-4.01-4.76-4.2-.14-.19-1.14-1.52-1.14-2.9 0-1.38.72-2.06.98-2.34Z"
+              fill="currentColor"
+            />
+          </svg>
+        );
+      case "META_ADS":
+        return <MetaInfinityIcon className={`h-5 w-5 ${iconColor}`} />;
+      case "EMAIL":
+        return <Mail className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      case "SMS":
+        return <MessageSquare className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      case "INSTAGRAM":
+        return <Instagram className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      case "LINKEDIN":
+      case "LINKEDIN_ADS":
+        return <Linkedin className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      case "GOOGLE_ADS":
+      case "TIKTOK_ADS":
+        return <Megaphone className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      case "FACEBOOK":
+      case "X":
+      case "YOUTUBE":
+        return <Share2 className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+      default:
+        return <Globe className={`h-5 w-5 ${iconColor}`} strokeWidth={1.9} />;
+    }
+  };
+
+  return (
+    <span className="inline-flex items-center gap-2.5 whitespace-nowrap text-[13px] font-medium text-slate-800">
+      <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center">
+        {renderIcon()}
+      </span>
+      <span>{meta.label}</span>
+    </span>
+  );
+}
+
+const CAMPAIGN_STATUS_META: Record<
+  string,
+  { label: string; cls: string; icon: React.ComponentType<{ className?: string; strokeWidth?: number }> }
+> = {
+  DRAFT: {
+    label: "Draft",
+    cls: "bg-[#EDE7FE] text-[#6D28D9]",
+    icon: Pencil,
+  },
+  SCHEDULED: {
+    label: "Scheduled",
+    cls: "bg-[#FEF0D5] text-[#B45309]",
+    icon: Calendar,
+  },
+  ACTIVE: {
+    label: "Active",
+    cls: "bg-[#DCFCE7] text-[#15803D]",
+    icon: Play,
+  },
+  COMPLETED: {
+    label: "Completed",
+    cls: "bg-[#DBEAFE] text-[#0369A1]",
+    icon: CheckCircle2,
+  },
+  PAUSED: {
+    label: "Paused",
+    cls: "bg-[#FFEDD5] text-[#C2410C]",
+    icon: Pause,
+  },
+};
+
+export function CampaignStatusPill({ status }: { status: string }) {
+  const meta = CAMPAIGN_STATUS_META[status] ?? {
+    label: status.charAt(0) + status.slice(1).toLowerCase(),
+    cls: "bg-slate-100 text-slate-700",
+    icon: CheckCircle2,
+  };
+  const Icon = meta.icon;
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${meta.cls}`}
+    >
+      <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={2.1} />
+      <span>{meta.label}</span>
     </span>
   );
 }

@@ -55,6 +55,13 @@ export async function POST(request: NextRequest) {
           channel: data.channel,
           type: data.type,
           status: data.status,
+          mediaType: data.mediaType,
+          mediaUrl: data.mediaType === "IMAGE" ? (data.mediaUrl ?? null) : null,
+          footerText: data.footerText ?? null,
+          actionsJson:
+            data.actions && data.actions.length > 0
+              ? JSON.stringify(data.actions)
+              : null,
           budgetCents: data.budgetCents,
           scheduledAt: data.scheduledAt ? new Date(data.scheduledAt) : null,
           startedAt: data.status === "ACTIVE" ? now : null,

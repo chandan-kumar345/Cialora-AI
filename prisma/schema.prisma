@@ -75,6 +75,10 @@ model Campaign {
   channel        String
   type           String
   status         String    @default("DRAFT")
+  mediaType      String    @default("NONE")
+  mediaUrl       String?
+  footerText     String?
+  actionsJson    String?
   budgetCents    Float     @default(0)
   sentCount      Int       @default(0)
   deliveredCount Int       @default(0)

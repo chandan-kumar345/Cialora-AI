@@ -21,6 +21,7 @@ import {
   sanitizeCsvCell,
   validateCsrfOrigin,
 } from "../src/lib/security";
+import { campaignCreateSchema } from "../src/lib/validation";
 
 describe("Security & Global Formatting Unit Tests", () => {
   it("hashes and verifies passwords with scrypt and rejects invalid passwords/hashes", async () => {
@@ -113,5 +114,39 @@ describe("Security & Global Formatting Unit Tests", () => {
     assert.equal(getTimeOfDayGreeting("UTC", morningUtc), "Good Morning");
     const eveningTokyo = new Date("2026-11-26T10:00:00.000Z"); // 19:00 JST
     assert.equal(getTimeOfDayGreeting("Asia/Tokyo", eveningTokyo), "Good Evening");
+  });
+
+  it("rejects unsafe campaign media and action URLs while allowing safe formats", () => {
+    const svgReject = campaignCreateSchema.safeParse({
+      name: "Unsafe SVG Test",
+      channel: "WHATSAPP",
+      type: "MARKETING",
+      mediaType: "IMAGE",
+      mediaUrl: "data:image/svg+xml;base64,PHN2Zz4=",
+    });
+    assert.equal(svgReject.success, false);
+
+    const jsActionReject = campaignCreateSchema.safeParse({
+      name: "Unsafe Action Test",
+      channel: "WHATSAPP",
+      type: "MARKETING",
+      actions: [
+        { type: "VISIT_WEBSITE", label: "Click", url: "javascript:alert(1)" },
+      ],
+    });
+    assert.equal(jsActionReject.success, false);
+
+    const validRaster = campaignCreateSchema.safeParse({
+      name: "Festive Jewellery Offer",
+      channel: "WHATSAPP",
+      type: "MARKETING",
+      mediaType: "IMAGE",
+      mediaUrl: "data:image/png;base64,iVBORw0KGgo=",
+      footerText: "Cielora Jewellery",
+      actions: [
+        { type: "VISIT_WEBSITE", label: "Shop collection", url: "https://cielora.ai" },
+      ],
+    });
+    assert.equal(validRaster.success, true);
   });
 });

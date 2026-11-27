@@ -149,15 +149,30 @@ describe("User-Wise Isolation & Zero-Dummy-Data Integration Tests", () => {
         cookie: cookieA,
         body: {
           name: `Secret Alpha Launch ${runId}`,
+          description: "*The Festive Edit ✨*\nExplore our exclusive drop.",
           channel: "WHATSAPP",
           type: "MARKETING",
           status: "ACTIVE",
+          mediaType: "IMAGE",
+          mediaUrl: "/images/campaign-festive-jewellery.jpg",
+          footerText: "Cielora Studio",
+          actions: [
+            {
+              type: "VISIT_WEBSITE",
+              label: "Shop collection",
+              url: "https://cielora.ai/collection",
+            },
+          ],
           budgetCents: 250000,
         },
       })
     );
     assert.equal(createCamp.status, 201);
     const campJson = await createCamp.json();
+    assert.equal(campJson.campaign.mediaType, "IMAGE");
+    assert.equal(campJson.campaign.mediaUrl, "/images/campaign-festive-jewellery.jpg");
+    assert.equal(campJson.campaign.footerText, "Cielora Studio");
+    assert.ok(campJson.campaign.actionsJson.includes("Shop collection"));
     campaignIdA = campJson.campaign.id;
 
     const eventRes = await campaignEventsRoute(

@@ -88,6 +88,57 @@ export async function PUT(request: NextRequest, context: RouteParams) {
   });
 }
 
+export async function PATCH(request: NextRequest, context: RouteParams) {
+  return withProtectedRoute(request, async ({ user }) => {
+    const { provider } = await context.params;
+    const normalized = provider.toUpperCase();
+    if (!isValidProvider(normalized)) {
+      return apiError("Unsupported integration provider.", 400);
+    }
+
+    const existing = await prisma.integrationConnection.findUnique({
+      where: {
+        userId_provider: {
+          userId: user.id,
+          provider: normalized,
+        },
+      },
+    });
+
+    if (!existing) {
+      return apiError("Integration connection not found.", 404);
+    }
+
+    const updated = await prisma.integrationConnection.update({
+      where: { id: existing.id },
+      data: {
+        status: "CONNECTED",
+        lastSyncedAt: new Date(),
+      },
+      select: {
+        provider: true,
+        displayName: true,
+        status: true,
+        configPreview: true,
+        lastSyncedAt: true,
+      },
+    });
+
+    const meta = extractRequestMeta(request);
+    await writeAuditLog({
+      userId: user.id,
+      actorEmail: user.email,
+      action: "INTEGRATION_SYNCED",
+      entityType: "IntegrationConnection",
+      entityId: normalized,
+      ipAddress: meta.ipAddress,
+      userAgent: meta.userAgent,
+    });
+
+    return apiOk({ integration: updated });
+  });
+}
+
 export async function DELETE(request: NextRequest, context: RouteParams) {
   return withProtectedRoute(request, async ({ user }) => {
     const { provider } = await context.params;

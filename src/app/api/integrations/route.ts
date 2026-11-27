@@ -8,6 +8,16 @@ const PROVIDER_CATALOG: Record<
   (typeof INTEGRATION_PROVIDERS)[number],
   { name: string; description: string; category: string }
 > = {
+  INSTAGRAM: {
+    name: "Instagram",
+    description: "Connect your Instagram Business account to schedule and automate posts.",
+    category: "Social",
+  },
+  FACEBOOK: {
+    name: "Facebook",
+    description: "Connect your Facebook Page to manage and automate your posts.",
+    category: "Social",
+  },
   WHATSAPP_CLOUD: {
     name: "WhatsApp Cloud API",
     description: "Official Meta Cloud API for marketing, utility & template broadcasts.",

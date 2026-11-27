@@ -17,25 +17,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.cielora-sidebar-bg {
-  background: radial-gradient(
-      140% 45% at 10% 96%,
-      rgba(168, 85, 247, 0.44) 0%,
-      rgba(168, 85, 247, 0) 62%
-    ),
-    radial-gradient(
-      95% 38% at 85% 84%,
-      rgba(236, 72, 153, 0.3) 0%,
-      rgba(236, 72, 153, 0) 68%
-    ),
-    radial-gradient(
-      80% 35% at 25% 18%,
-      rgba(91, 33, 182, 0.28) 0%,
-      rgba(91, 33, 182, 0) 65%
-    ),
-    linear-gradient(180deg, #130829 0%, #170a33 55%, #1d0c3f 100%);
-}
-
 .cielora-hero-bg {
   background: radial-gradient(
       circle at 82% 24%,
@@ -169,30 +150,87 @@ body {
   appearance: none;
 }
 .cielora-sidebar-bg {
-  background: radial-gradient(ellipse at 110% 0%, #351064, transparent 56%), linear-gradient(160deg,#260d49,#16092e 72%,#290b4b);
-  border-radius: 30px;
-  padding: clamp(12px, 1vw, 17px) 13px;
+  background:
+    radial-gradient(ellipse at 105% 0%, rgba(233, 213, 255, 0.42) 0%, transparent 54%),
+    radial-gradient(ellipse at 12% 96%, rgba(244, 114, 182, 0.26) 0%, transparent 56%),
+    radial-gradient(ellipse at 86% 78%, rgba(192, 132, 252, 0.34) 0%, transparent 60%),
+    linear-gradient(165deg, #6941b5 0%, #7c51cb 52%, #865bd6 100%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 26px;
+  padding: clamp(10px, .85vw, 14px) 11px;
+  transition: padding 340ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.cielora-sidebar-bg a[href="/dashboard"]:first-child:has(img) { padding: 0 5px; border: 0; margin-bottom: clamp(10px, 3vh, 30px); }
-.cielora-sidebar-bg nav { display: grid; gap: 5px; }
+.cielora-sidebar-bg[data-collapsed="true"] {
+  padding-inline: 11px;
+}
+.cielora-sidebar-bg nav { display: grid; gap: clamp(4px, 0.65vh, 7px); }
 .cielora-sidebar-bg nav > a, .cielora-sidebar-bg nav > div > div:first-child {
-  margin: 0; background-color: #ffffff12; border: 1px solid #ffffff0c;
-  display: flex; align-items: center; gap: 14px; color: white;
-  font-size: clamp(.85rem, 1vw, 1.05rem); font-weight: 600; border-radius: 17px;
-  min-height: clamp(34px, 4.9vh, 47px); padding: 4px clamp(10px, 1vw, 18px);
+  margin: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-size: clamp(.86rem, .96vw, .98rem);
+  font-weight: 600;
+  border-radius: 15px;
+  min-height: clamp(35px, 4.75vh, 48px);
+  padding: 4px 14px;
+  overflow: hidden;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 260ms ease,
+    padding 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    gap 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    min-height 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.cielora-sidebar-bg nav svg.shrink-0 { width: 1.55em; height: 1.55em; }
-.cielora-sidebar-bg nav a:hover { background-color: #ffffff24; }
-.cielora-sidebar-bg nav .cielora-nav-active { background-image: linear-gradient(110deg,#e46cf3,#a600ee 58%,#d000cf); border-color: #edb4ff; }
-.cielora-sidebar-bg p.uppercase { color: #f2eafb; letter-spacing: .025em; font-size: .75rem; padding-bottom: 7px; }
-.sidebar-plan { flex-shrink: 0; border-color: #9646cd; background: linear-gradient(125deg,#552380,#350964); border-radius: 22px; padding: clamp(12px,1.2vw,20px); }
-.sidebar-plan img { width: 32px; height: 32px; }
-.sidebar-plan > div, .sidebar-plan button { font-size: 1rem; }
-.sidebar-plan p { font-size: .8rem; color: white; }
-.sidebar-plan button { padding-block: .65rem; }
-.cielora-upgrade-btn { background: linear-gradient(105deg,#ffb32c,#ff6572 42%,#f000d8 95%); }
+.cielora-sidebar-bg nav svg.shrink-0 {
+  width: 20px;
+  height: 20px;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cielora-sidebar-bg nav a:hover,
+.cielora-sidebar-bg nav > div > div:first-child:hover {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+.cielora-sidebar-bg nav .cielora-nav-active,
+.cielora-sidebar-bg nav .cielora-nav-active:hover {
+  background-image: linear-gradient(110deg, #f472b6 0%, #d946ef 52%, #a855f7 100%);
+  border-color: #fdf4ff;
+  box-shadow: 0 8px 20px -4px rgba(217, 70, 239, 0.55);
+}
+.cielora-sidebar-bg[data-collapsed="true"] nav > a,
+.cielora-sidebar-bg[data-collapsed="true"] nav > div > div:first-child {
+  min-height: 44px;
+  padding: 4px 13px;
+  gap: 0;
+  border-radius: 14px;
+}
+.cielora-sidebar-bg[data-collapsed="true"] nav svg.shrink-0 {
+  width: 20px;
+  height: 20px;
+}
+.cielora-sidebar-bg p.uppercase { color: rgba(255, 255, 255, 0.85); letter-spacing: .05em; font-size: .72rem; padding-bottom: 5px; }
+.sidebar-plan { flex-shrink: 0; border-color: rgba(255, 255, 255, 0.3); background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(167, 139, 250, 0.32)); border-radius: 18px; padding: clamp(10px, .9vw, 14px); }
+.sidebar-plan img { width: 28px; height: 28px; }
+.sidebar-plan > div, .sidebar-plan button { font-size: .9rem; }
+.sidebar-plan p { font-size: .72rem; color: rgba(255, 255, 255, 0.92); }
+.sidebar-plan button { padding-block: .52rem; }
+.cielora-upgrade-btn { background: linear-gradient(105deg, #fbbf24 0%, #fb7185 45%, #ec4899 95%); box-shadow: 0 8px 20px -5px rgba(236, 72, 153, 0.45); }
 @media (min-width: 1024px) {
-  .workspace-shell > aside { width: clamp(220px,17.3vw,308px); }
+  .workspace-shell > aside {
+    width: clamp(256px, 18.2vw, 290px);
+    will-change: width;
+    transition: width 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .workspace-shell > aside[data-collapsed="true"] {
+    width: 92px;
+  }
   .workspace-shell main { padding-inline: 12px 18px; }
   .workspace-shell header.cielora-header-card { padding-inline: 24px; min-height: 76px; }
 }

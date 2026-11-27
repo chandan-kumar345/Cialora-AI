@@ -34,7 +34,7 @@ import {
 import {
   CampaignDetailModal,
   CampaignRecord,
-  CreateCampaignModal,
+  CampaignThumbnail,
   RecordTelemetryModal,
 } from "@/components/CampaignModals";
 import { ChannelBadge, StatusBadge, TypeBadge } from "@/components/ChannelBadge";
@@ -186,7 +186,6 @@ export function DashboardClient({
     useState<CampaignRecord[]>(initialCampaigns);
   const [loadingPerf, setLoadingPerf] = useState(false);
 
-  const [createOpen, setCreateOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
   const [rangeMenuOpen, setRangeMenuOpen] = useState(false);
   const [detailCampaign, setDetailCampaign] =
@@ -328,14 +327,13 @@ export function DashboardClient({
             </p>
 
             <div className="mt-3.5 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setCreateOpen(true)}
+              <Link
+                href="/campaigns/new"
                 className="cielora-ai-btn inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold text-white transition"
               >
                 <span>Create Campaign</span>
                 <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-              </button>
+              </Link>
               <button
                 type="button"
                 onClick={() => setFeaturesOpen(true)}
@@ -553,14 +551,13 @@ export function DashboardClient({
                 real campaign to track deliveries, clicks, leads, and revenue in{" "}
                 {user.currency}.
               </p>
-              <button
-                type="button"
-                onClick={() => setCreateOpen(true)}
+              <Link
+                href="/campaigns/new"
                 className="cielora-gradient-btn mt-3.5 inline-flex items-center gap-2 rounded-full px-5 py-2 text-xs font-bold text-white"
               >
                 <span>Create First Campaign</span>
                 <ArrowRight className="h-3.5 w-3.5" />
-              </button>
+              </Link>
             </div>
           ) : (
             <div className="mt-3 overflow-x-auto">
@@ -590,9 +587,10 @@ export function DashboardClient({
                       <tr key={camp.id} className="hover:bg-slate-50/70">
                         <td className="py-2 pr-1.5">
                           <div className="flex items-center gap-2">
-                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-fuchsia-600 text-[9px] font-bold text-white shadow-xs">
-                              {camp.channel.slice(0, 2)}
-                            </span>
+                            <CampaignThumbnail
+                              campaign={camp}
+                              className="h-7 w-9 rounded-lg"
+                            />
                             <div className="min-w-0">
                               <div className="truncate font-bold text-slate-900 max-w-[118px]">
                                 {camp.name}
@@ -723,13 +721,6 @@ export function DashboardClient({
           </button>
         </div>
       </section>
-
-      <CreateCampaignModal
-        open={createOpen}
-        currency={user.currency}
-        onClose={() => setCreateOpen(false)}
-        onCreated={() => refreshAll(range)}
-      />
 
       <RecordTelemetryModal
         campaign={telemetryCampaign}

@@ -4,52 +4,86 @@ import React from "react";
 
 export function CieloraLogo({
   darkText = false,
-  showTagline = true,
   compact = false,
+  iconOnly = false,
 }: {
   darkText?: boolean;
   showTagline?: boolean;
   compact?: boolean;
+  iconOnly?: boolean;
 }) {
+  if (darkText) {
+    return (
+      <div className="inline-flex items-center justify-center select-none">
+        <img
+          src="/images/cielora-logo-full.png"
+          alt="Cielora AI — Your Business. Beyond the Sky."
+          className="h-14 w-auto max-w-[260px] object-contain mix-blend-multiply"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="inline-flex items-center gap-2.5 select-none">
+    <div
+      className={`inline-flex w-full items-center justify-center select-none transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        iconOnly
+          ? "min-h-[54px] py-1"
+          : compact
+            ? "min-h-[68px] py-1.5"
+            : "min-h-[76px] py-2"
+      }`}
+    >
       <img
         src="/images/cielora-mark.png"
         alt="Cielora AI mark"
-        className={`shrink-0 object-contain drop-shadow-sm ${
-          compact ? "h-10 w-12" : "h-11 w-14"
+        className={`shrink-0 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.34)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 ${
+          iconOnly
+            ? "h-10 w-10"
+            : compact
+              ? "h-12 w-12"
+              : "h-14 w-14"
         }`}
       />
-      <div className="leading-tight">
-        <div className="flex items-baseline gap-1">
-          <span
-            className={`font-extrabold tracking-tight ${
-              compact ? "text-[18px]" : "text-[22px]"
-            } ${darkText ? "text-[#0D0824]" : "text-white"}`}
-          >
-            Cielora
-          </span>
-          <span
-            className={`font-extrabold tracking-tight ${
-              compact ? "text-[18px]" : "text-[22px]"
-            } ${
-              darkText
-                ? "bg-gradient-to-r from-[#7C3AED] to-[#9333EA] bg-clip-text text-transparent"
-                : "bg-gradient-to-r from-[#C084FC] to-[#F472B6] bg-clip-text text-transparent"
-            }`}
-          >
-            AI
-          </span>
-        </div>
-        {showTagline && (
+      <div
+        aria-hidden={iconOnly}
+        className={`flex items-center overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          iconOnly
+            ? "ml-0 max-w-0 -translate-x-2 opacity-0 pointer-events-none"
+            : "ml-2.5 max-w-[190px] translate-x-0 opacity-100"
+        }`}
+      >
+        <span
+          className={`mr-2.5 w-px shrink-0 bg-white/30 transition-all duration-300 ${
+            compact ? "h-9" : "h-10"
+          }`}
+          aria-hidden="true"
+        />
+        <div className="min-w-0 text-left leading-tight">
+          <div className="flex items-baseline gap-1 whitespace-nowrap">
+            <span
+              className={`font-extrabold tracking-tight text-white ${
+                compact ? "text-[21px]" : "text-[24px]"
+              }`}
+            >
+              Cielora
+            </span>
+            <span
+              className={`bg-gradient-to-r from-[#F5D0FE] via-[#F9A8D4] to-[#93C5FD] bg-clip-text font-extrabold tracking-tight text-transparent ${
+                compact ? "text-[21px]" : "text-[24px]"
+              }`}
+            >
+              AI
+            </span>
+          </div>
           <p
-            className={`font-medium tracking-tight whitespace-nowrap ${
+            className={`mt-0.5 font-medium tracking-tight whitespace-nowrap text-white/85 ${
               compact ? "text-[9.5px]" : "text-[11px]"
-            } ${darkText ? "text-slate-600" : "text-purple-200/75"}`}
+            }`}
           >
             Your Business. Beyond the Sky.
           </p>
-        )}
+        </div>
       </div>
     </div>
   );

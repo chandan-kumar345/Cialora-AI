@@ -124,12 +124,68 @@ export const CAMPAIGN_STATUSES = [
   "COMPLETED",
 ] as const;
 
+export const CAMPAIGN_MEDIA_TYPES = ["NONE", "IMAGE"] as const;
+
+export const CAMPAIGN_ACTION_TYPES = [
+  "VISIT_WEBSITE",
+  "CALL_PHONE",
+  "QUICK_REPLY",
+] as const;
+
+export const campaignMediaUrlSchema = z
+  .string()
+  .trim()
+  .max(1_500_000, "Uploaded image exceeds maximum size.")
+  .refine(
+    (val) =>
+      val === "" ||
+      /^\/images\/[A-Za-z0-9._-]+$/.test(val) ||
+      isSafeHttpUrl(val) ||
+      /^data:image\/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(val),
+    {
+      message:
+        "Media must be an uploaded raster image (PNG, JPEG, WebP, GIF) or http(s) URL.",
+    }
+  )
+  .optional()
+  .nullable()
+  .transform((v) => (!v ? undefined : v));
+
+export const campaignActionSchema = z.object({
+  type: z.enum(CAMPAIGN_ACTION_TYPES),
+  label: z.string().trim().min(1, "Action button text is required.").max(40),
+  url: z
+    .string()
+    .trim()
+    .max(500)
+    .refine(
+      (val) =>
+        val === "" ||
+        isSafeHttpUrl(val) ||
+        /^\+?[0-9\s()-]{5,20}$/.test(val),
+      {
+        message: "Action target must use https:// or a valid phone number.",
+      }
+    )
+    .optional()
+    .transform((v) => (!v ? undefined : v)),
+});
+
 export const campaignCreateSchema = z.object({
   name: z.string().trim().min(2, "Campaign name is required.").max(140),
-  description: z.string().trim().max(1000).optional(),
+  description: z.string().trim().max(2000).optional(),
   channel: z.enum(CAMPAIGN_CHANNELS),
   type: z.enum(CAMPAIGN_TYPES),
   status: z.enum(CAMPAIGN_STATUSES).optional().default("DRAFT"),
+  mediaType: z.enum(CAMPAIGN_MEDIA_TYPES).optional().default("NONE"),
+  mediaUrl: campaignMediaUrlSchema,
+  footerText: z
+    .string()
+    .trim()
+    .max(120)
+    .optional()
+    .transform((v) => (!v ? undefined : v)),
+  actions: z.array(campaignActionSchema).max(3).optional(),
   budgetCents: z.number().int().min(0).max(1_000_000_000_000).optional().default(0),
   scheduledAt: z.string().datetime().optional().nullable(),
 });
@@ -234,8 +290,19 @@ export const automationCreateSchema = z.object({
     "CAMPAIGN_CLICKED",
     "MESSAGE_DELIVERED",
     "STAGE_CHANGED",
+    "SCHEDULE_POST",
+    "NEW_CONTENT_ADDED",
+    "RECURRING_SCHEDULE",
   ]),
-  actionChannel: z.enum(["WHATSAPP", "EMAIL", "SMS", "INTERNAL_ALERT"]),
+  actionChannel: z.enum([
+    "WHATSAPP",
+    "EMAIL",
+    "SMS",
+    "INTERNAL_ALERT",
+    "INSTAGRAM",
+    "FACEBOOK",
+    "INSTAGRAM_AND_FACEBOOK",
+  ]),
   actionTemplate: z.string().trim().min(2).max(2000),
   isActive: z.boolean().optional().default(true),
 });
@@ -243,6 +310,8 @@ export const automationCreateSchema = z.object({
 export const automationUpdateSchema = automationCreateSchema.partial();
 
 export const INTEGRATION_PROVIDERS = [
+  "INSTAGRAM",
+  "FACEBOOK",
   "WHATSAPP_CLOUD",
   "META_MARKETING",
   "GOOGLE_ADS",

@@ -53,6 +53,19 @@ export async function PATCH(request: NextRequest, context: RouteParams) {
         ...(data.description !== undefined ? { description: data.description } : {}),
         ...(data.channel !== undefined ? { channel: data.channel } : {}),
         ...(data.type !== undefined ? { type: data.type } : {}),
+        ...(data.mediaType !== undefined ? { mediaType: data.mediaType } : {}),
+        ...(data.mediaType === "NONE"
+          ? { mediaUrl: null }
+          : data.mediaUrl !== undefined
+            ? { mediaUrl: data.mediaUrl ?? null }
+            : {}),
+        ...(data.footerText !== undefined ? { footerText: data.footerText ?? null } : {}),
+        ...(data.actions !== undefined
+          ? {
+              actionsJson:
+                data.actions.length > 0 ? JSON.stringify(data.actions) : null,
+            }
+          : {}),
         ...(data.status !== undefined
           ? {
               status: data.status,

@@ -94,11 +94,34 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   } = useWorkspace();
 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [socialExpanded, setSocialExpanded] = useState(
     pathname.startsWith("/social")
   );
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem("cielora_sidebar_collapsed") === "true") {
+        setSidebarCollapsed(true);
+      }
+    } catch {
+      // Ignore storage access restrictions
+    }
+  }, []);
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem("cielora_sidebar_collapsed", String(next));
+      } catch {
+        // Ignore storage access restrictions
+      }
+      return next;
+    });
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
@@ -129,6 +152,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadNotifications();
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileNavOpen]);
 
   useEffect(() => {
     if (aiInitialPrompt) {
@@ -234,158 +266,296 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const firstName = getFirstName(user.fullName);
   const initials = getInitials(user.fullName);
 
-  const renderSidebarCard = (isMobile = false) => (
-    <div
-      className={`cielora-sidebar-bg no-scrollbar flex h-full w-full flex-col justify-between gap-2 overflow-hidden px-3 py-2.5 text-white ${
-        isMobile ? "" : "rounded-[22px] shadow-[0_16px_42px_-12px_rgba(20,8,45,0.48)]"
-      }`}
-    >
-      <div className="no-scrollbar flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto lg:overflow-visible">
-        <Link
-          href="/dashboard"
-          className="block px-1 pt-0.5 pb-1 border-b border-white/10 shrink-0"
-          onClick={() => setMobileNavOpen(false)}
-        >
-          <CieloraLogo compact />
-        </Link>
+  const renderSidebarCard = (isMobile = false) => {
+    const collapsed = !isMobile && sidebarCollapsed;
 
-        <div className="shrink-0">
-          <p className="px-2.5 pb-0.5 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
-            Overview
-          </p>
-          <nav className="space-y-0.5" aria-label="Main navigation">
-            {OVERVIEW_ITEMS.map((item) => {
-              const active =
-                pathname === item.href ||
-                (item.href !== "/dashboard" && pathname.startsWith(item.href));
-              const Icon = item.icon;
-              if (item.children) {
+    return (
+      <div
+        data-collapsed={collapsed ? "true" : "false"}
+        className={`cielora-sidebar-bg no-scrollbar flex h-full w-full flex-col justify-between gap-2 overflow-hidden px-3 py-2.5 text-white ${
+          isMobile
+            ? ""
+            : "rounded-[22px] shadow-[0_16px_38px_-12px_rgba(109,40,217,0.32)]"
+        }`}
+      >
+        <div className="no-scrollbar -mx-1 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto px-1">
+          <button
+            type="button"
+            data-sidebar-toggle="true"
+            onClick={() => (isMobile ? setMobileNavOpen(false) : toggleSidebar())}
+            aria-expanded={!collapsed}
+            aria-label={
+              isMobile
+                ? "Close navigation menu"
+                : collapsed
+                  ? "Expand sidebar"
+                  : "Collapse sidebar"
+            }
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="flex w-full shrink-0 cursor-pointer items-center justify-center border-b border-white/20 px-0 pt-0.5 pb-2.5 transition-colors duration-200"
+          >
+            <CieloraLogo compact iconOnly={collapsed} />
+          </button>
+
+          <div className="shrink-0">
+            <div className="relative h-5 overflow-hidden px-2.5">
+              <p
+                aria-hidden={collapsed}
+                className={`text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  collapsed
+                    ? "-translate-x-2 opacity-0"
+                    : "translate-x-0 opacity-100"
+                }`}
+              >
+                Overview
+              </p>
+              <div
+                aria-hidden="true"
+                className={`absolute inset-x-0 top-1/2 mx-auto h-px w-8 -translate-y-1/2 bg-white/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  collapsed ? "scale-x-100 opacity-100" : "scale-x-50 opacity-0"
+                }`}
+              />
+            </div>
+            <nav className="space-y-0.5" aria-label="Main navigation">
+              {OVERVIEW_ITEMS.map((item) => {
+                const active =
+                  pathname === item.href ||
+                  (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                const Icon = item.icon;
+                if (item.children) {
+                  return (
+                    <div key={item.href}>
+                      <div
+                        className={`flex items-center justify-between whitespace-nowrap rounded-xl text-[12px] font-medium ${
+                          active
+                            ? "cielora-nav-active text-white font-semibold"
+                            : "text-white/90 hover:bg-white/15 hover:text-white"
+                        }`}
+                      >
+                        <Link
+                          href={item.href}
+                          title={collapsed ? item.label : undefined}
+                          aria-label={item.label}
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex min-w-0 flex-1 items-center whitespace-nowrap transition-[gap] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                            collapsed ? "gap-0" : "gap-2.5"
+                          }`}
+                        >
+                          <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
+                          <span
+                            className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                              collapsed
+                                ? "max-w-0 -translate-x-1 opacity-0"
+                                : "max-w-[165px] translate-x-0 opacity-100"
+                            }`}
+                          >
+                            {item.label}
+                          </span>
+                        </Link>
+                        <button
+                          type="button"
+                          aria-label="Toggle Social Marketing menu"
+                          tabIndex={collapsed ? -1 : 0}
+                          aria-hidden={collapsed}
+                          onClick={() => setSocialExpanded((v) => !v)}
+                          className={`shrink-0 overflow-hidden opacity-85 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-100 ${
+                            collapsed
+                              ? "pointer-events-none max-w-0 p-0 opacity-0"
+                              : "max-w-7 p-0.5"
+                          }`}
+                        >
+                          <ChevronRight
+                            className={`h-4 w-4 transition-transform duration-200 ${
+                              socialExpanded ? "rotate-90" : ""
+                            }`}
+                            strokeWidth={2.2}
+                          />
+                        </button>
+                      </div>
+                      <div
+                        aria-hidden={collapsed || !socialExpanded}
+                        className={`grid transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          socialExpanded && !collapsed
+                            ? "mt-1 grid-rows-[1fr] opacity-100"
+                            : "pointer-events-none mt-0 grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="ml-6 space-y-0.5 border-l border-white/25 pl-2.5">
+                            {item.children.map((sub) => (
+                              <Link
+                                key={sub.label}
+                                href={sub.href}
+                                tabIndex={socialExpanded && !collapsed ? 0 : -1}
+                                onClick={() => setMobileNavOpen(false)}
+                                className="block whitespace-nowrap rounded-lg px-2 py-1 text-[11px] text-white/85 transition-colors hover:bg-white/15 hover:text-white"
+                              >
+                                {sub.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 return (
-                  <div key={item.href}>
-                    <div
-                      className={`flex items-center justify-between whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
-                        active
-                          ? "cielora-nav-active text-white font-semibold"
-                          : "text-purple-100/80 hover:bg-white/10 hover:text-white"
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={collapsed ? item.label : undefined}
+                    aria-label={item.label}
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`flex items-center whitespace-nowrap rounded-xl text-[12px] font-medium ${
+                      active
+                        ? "cielora-nav-active text-white font-semibold"
+                        : "text-white/90 hover:bg-white/15 hover:text-white"
+                    }`}
+                  >
+                    <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
+                    <span
+                      className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        collapsed
+                          ? "max-w-0 -translate-x-1 opacity-0"
+                          : "max-w-[165px] translate-x-0 opacity-100"
                       }`}
                     >
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileNavOpen(false)}
-                        className="flex flex-1 items-center gap-2.5 whitespace-nowrap"
-                      >
-                        <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
-                        <span>{item.label}</span>
-                      </Link>
-                      <button
-                        type="button"
-                        aria-label="Toggle Social Marketing menu"
-                        onClick={() => setSocialExpanded((v) => !v)}
-                        className="p-0.5 opacity-80 hover:opacity-100 shrink-0"
-                      >
-                        <ChevronRight
-                          className={`h-4 w-4 transition-transform ${
-                            socialExpanded ? "rotate-90" : ""
-                          }`}
-                          strokeWidth={2.2}
-                        />
-                      </button>
-                    </div>
-                    {socialExpanded && (
-                      <div className="mt-0.5 ml-6 space-y-0.5 border-l border-white/15 pl-2.5">
-                        {item.children.map((sub) => (
-                          <Link
-                            key={sub.label}
-                            href={sub.href}
-                            onClick={() => setMobileNavOpen(false)}
-                            className="block whitespace-nowrap rounded-lg px-2 py-1 text-[11px] text-purple-200/80 hover:bg-white/10 hover:text-white"
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                      {item.label}
+                    </span>
+                  </Link>
                 );
-              }
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
-                    active
-                      ? "cielora-nav-active text-white font-semibold"
-                      : "text-purple-100/80 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+              })}
+            </nav>
+          </div>
+
+          <div className="shrink-0">
+            <div className="relative h-5 overflow-hidden px-2.5">
+              <p
+                aria-hidden={collapsed}
+                className={`text-[10px] font-semibold uppercase tracking-[0.14em] text-white/80 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  collapsed
+                    ? "-translate-x-2 opacity-0"
+                    : "translate-x-0 opacity-100"
+                }`}
+              >
+                Setup
+              </p>
+              <div
+                aria-hidden="true"
+                className={`absolute inset-x-0 top-1/2 mx-auto h-px w-8 -translate-y-1/2 bg-white/25 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  collapsed ? "scale-x-100 opacity-100" : "scale-x-50 opacity-0"
+                }`}
+              />
+            </div>
+            <nav className="space-y-0.5" aria-label="Setup navigation">
+              {SETUP_ITEMS.map((item) => {
+                const active = pathname.startsWith(item.href);
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    title={collapsed ? item.label : undefined}
+                    aria-label={item.label}
+                    onClick={() => setMobileNavOpen(false)}
+                    className={`flex items-center whitespace-nowrap rounded-xl text-[12px] font-medium ${
+                      active
+                        ? "cielora-nav-active text-white font-semibold"
+                        : "text-white/90 hover:bg-white/15 hover:text-white"
+                    }`}
+                  >
+                    <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
+                    <span
+                      className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        collapsed
+                          ? "max-w-0 -translate-x-1 opacity-0"
+                          : "max-w-[165px] translate-x-0 opacity-100"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
         </div>
 
-        <div className="shrink-0">
-          <p className="px-2.5 pb-0.5 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-purple-200/45">
-            Setup
-          </p>
-          <nav className="space-y-0.5" aria-label="Setup navigation">
-            {SETUP_ITEMS.map((item) => {
-              const active = pathname.startsWith(item.href);
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl px-2.5 py-[4.5px] text-[12px] font-medium transition ${
-                    active
-                      ? "cielora-nav-active text-white font-semibold"
-                      : "text-purple-100/80 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={2} />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Bottom Upgrade Card matching reference layout (compact, zero overlap) */}
-      <div className="shrink-0 rounded-2xl border border-purple-300/20 bg-gradient-to-b from-white/10 to-purple-950/55 p-2.5 backdrop-blur-md">
-        <div className="flex items-center gap-2 text-[12px] font-bold text-white whitespace-nowrap">
-          <img
-            src="/images/crown-3d.png"
-            alt=""
-            aria-hidden="true"
-            className="h-7 w-8 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(245,158,11,0.38)]"
-          />
-          <span>
-            {user.planTier === "PRO"
-              ? "Pro Workspace"
-              : user.planTier === "ENTERPRISE"
-                ? "Enterprise Plan"
-                : "Upgrade to Pro"}
-          </span>
-        </div>
-        <p className="mt-1 text-[10px] leading-tight text-purple-100/75">
-          Unlock automation, AI tools and higher limits.
-        </p>
-        <button
-          type="button"
-          onClick={() => setUpgradeOpen(true)}
-          className="cielora-upgrade-btn mt-2 flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 text-[11px] font-bold text-white transition"
+        {/* Bottom Upgrade Card (smoothly morphs between full card and crown icon button) */}
+        <div
+          className={`relative shrink-0 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            collapsed ? "max-h-[46px]" : "max-h-[180px]"
+          }`}
         >
-          <span>{user.planTier === "STARTER" ? "Upgrade Now" : "Manage Plan"}</span>
-          <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-        </button>
+          <button
+            type="button"
+            onClick={() => setUpgradeOpen(true)}
+            tabIndex={collapsed ? 0 : -1}
+            aria-hidden={!collapsed}
+            title={
+              user.planTier === "PRO"
+                ? "Pro Workspace"
+                : user.planTier === "ENTERPRISE"
+                  ? "Enterprise Plan"
+                  : "Upgrade to Pro"
+            }
+            aria-label="Upgrade to Pro"
+            className={`mx-auto flex h-[44px] w-[46px] shrink-0 cursor-pointer items-center justify-center rounded-[14px] border border-white/30 bg-gradient-to-b from-white/25 to-violet-500/35 shadow-[0_8px_18px_-4px_rgba(91,33,182,0.3)] backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 hover:bg-white/30 ${
+              collapsed
+                ? "relative z-10 scale-100 opacity-100"
+                : "pointer-events-none absolute inset-x-0 top-0 scale-75 opacity-0"
+            }`}
+          >
+            <img
+              src="/images/crown-3d.png"
+              alt=""
+              aria-hidden="true"
+              className="h-6 w-6 object-contain drop-shadow-[0_4px_10px_rgba(245,158,11,0.45)]"
+            />
+          </button>
+
+          <div
+            aria-hidden={collapsed}
+            className={`sidebar-plan rounded-2xl border border-white/30 bg-gradient-to-b from-white/22 to-violet-500/30 p-2.5 backdrop-blur-md shadow-[0_8px_20px_-6px_rgba(91,33,182,0.28)] transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              collapsed
+                ? "pointer-events-none translate-y-2 scale-95 opacity-0"
+                : "translate-y-0 scale-100 opacity-100"
+            }`}
+          >
+            <div className="flex items-center gap-2 text-[12px] font-bold text-white whitespace-nowrap">
+              <img
+                src="/images/crown-3d.png"
+                alt=""
+                aria-hidden="true"
+                className="h-7 w-7 object-contain shrink-0 drop-shadow-[0_4px_10px_rgba(245,158,11,0.38)]"
+              />
+              <span>
+                {user.planTier === "PRO"
+                  ? "Pro Workspace"
+                  : user.planTier === "ENTERPRISE"
+                    ? "Enterprise Plan"
+                    : "Upgrade to Pro"}
+              </span>
+            </div>
+            <p className="mt-1 text-[10px] leading-tight text-white/90">
+              Unlock automation, AI tools and higher limits.
+            </p>
+            <button
+              type="button"
+              tabIndex={collapsed ? -1 : 0}
+              onClick={() => setUpgradeOpen(true)}
+              className="cielora-upgrade-btn mt-2 flex w-full items-center justify-center gap-1.5 rounded-full py-2 text-[11.5px] font-bold text-white transition"
+            >
+              <span>
+                {user.planTier === "STARTER" ? "Upgrade Now" : "Manage Plan"}
+              </span>
+              <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const hasSearchHits =
     searchResults &&
@@ -397,21 +567,36 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="workspace-shell flex min-h-screen overflow-x-clip bg-[#F4F5FA] text-slate-900">
       {/* Floating Rounded Desktop Sidebar matching reference image */}
-      <aside className="hidden lg:block lg:w-[244px] lg:shrink-0 lg:sticky lg:top-0 lg:h-screen lg:p-2.5">
+      <aside
+        data-collapsed={sidebarCollapsed ? "true" : "false"}
+        className="hidden lg:block lg:shrink-0 lg:sticky lg:top-0 lg:h-screen lg:p-2.5"
+      >
         {renderSidebarCard(false)}
       </aside>
 
-      {mobileNavOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
-            onClick={() => setMobileNavOpen(false)}
-          />
-          <div className="relative z-10 h-full w-[248px]">
-            {renderSidebarCard(true)}
-          </div>
+      {/* Smooth Slide-Over Mobile Navigation Drawer */}
+      <div
+        aria-hidden={!mobileNavOpen}
+        className={`fixed inset-0 z-50 flex lg:hidden transition-[opacity,visibility] duration-300 ease-out ${
+          mobileNavOpen
+            ? "visible pointer-events-auto opacity-100"
+            : "invisible pointer-events-none opacity-0"
+        }`}
+      >
+        <div
+          className={`fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300 ease-out ${
+            mobileNavOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setMobileNavOpen(false)}
+        />
+        <div
+          className={`relative z-10 h-full w-[262px] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            mobileNavOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          {renderSidebarCard(true)}
         </div>
-      )}
+      </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Curved Floating Top Header */}
